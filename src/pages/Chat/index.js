@@ -15,31 +15,36 @@ export default class Chat extends Component {
       currentMessage: {},
       chatMessages: [],
       formData: {},
-      lastId: "",
+      open: false,
       renderMessage: false,
-      renderNextMessage: false,
       responseError: false,
       responseSuccess: false,
-      showSubmit: false,
-      open: false
+      showSubmit: false
     };
   }
 
   componentDidMount() {
     const { stages } = this.props;
-    var { currentMessage, chatMessages } = this.state;
+    let { currentMessage, chatMessages } = this.state;
 
     currentMessage = stages[0];
     chatMessages.push(currentMessage);
-    this.setState({ renderMesage: true });
+    this.setState({ renderMessage: true });
 
     this.renderNextMessage(currentMessage, true);
   }
 
-  renderNextMessage = (currentMessage, renderNextMessage = false) => {
+  renderNextMessage = (
+    currentMessage,
+    renderNextMessage = false,
+    inputValue = ""
+  ) => {
     if (currentMessage.trigger && renderNextMessage) {
       let index = currentMessage.trigger;
-      let nextMessage = this.props.stages[index];
+      let nextMessage = {
+        ...this.props.stages[index],
+        previousValue: inputValue
+      };
 
       this.renderMessages(nextMessage);
     }
@@ -49,7 +54,6 @@ export default class Chat extends Component {
     setTimeout(() => {
       if (messageObject.endChat) {
         this.setState({
-          renderNextMessage: false,
           showSubmit: true
         });
         this.setFocusOnDivWithId(messageObject.id);
@@ -75,9 +79,8 @@ export default class Chat extends Component {
     buttonSubmit.disabled = true;
 
     formData[`${inputField.name}`] = inputField.value;
-    this.setState({ lastInputName: inputField.name });
 
-    this.renderNextMessage(currentMessage, true);
+    this.renderNextMessage(currentMessage, true, inputField.value);
   };
 
   handleStars = value => {
@@ -94,11 +97,9 @@ export default class Chat extends Component {
   };
 
   handleMessage = data => {
-    let { formData } = this.state;
-
-    return typeof data === "string"
-      ? data.replace("{previousValue}", formData["name"])
-      : data;
+    return typeof data.message === "string"
+      ? data.message.replace("{previousValue}", data.previousValue)
+      : data.message;
   };
 
   handleSubmit = async () => {
@@ -137,11 +138,7 @@ export default class Chat extends Component {
   };
 
   render() {
-    const {
-      chatMessages,
-      showSubmit,
-      currentMessage
-    } = this.state;
+    const { chatMessages, showSubmit, currentMessage } = this.state;
 
     return (
       <div className="chat-box" id="chat">
@@ -154,9 +151,7 @@ export default class Chat extends Component {
             <div className="chat-avatar-container">
               <img className="chat-avatar" src={data.avatar} alt="Avatar" />
             </div>
-            <div className="chat-message">
-              {this.handleMessage(data.message)}
-            </div>
+            <div className="chat-message">{this.handleMessage(data)}</div>
           </div>
         ))}
         {showSubmit && (

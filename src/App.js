@@ -158,8 +158,7 @@ export default class App extends Component {
                     autoFocus
                     name="email"
                     autoComplete="off"
-                    pattern=
-                      "[^@\s]+@[^@\s]+\.[^@\s]+"
+                    pattern="[^@\s]+@[^@\s]+\.[^@\s]+"
                     required
                   />
                   <button type="submit" className="send-button">

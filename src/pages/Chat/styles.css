@@ -7,6 +7,7 @@
   box-shadow: 0 2px 2px 0 rgba(0, 0, 0, 0.14);
   color: #fff;
   overflow: auto;
+  letter-spacing: 1px;
 }
 
 .chat-avatar-container {
@@ -138,13 +139,13 @@
   color: red;
 }
 
-@media only screen and (max-width: 450px) and (min-width: 410px){
+@media only screen and (max-width: 450px) and (min-width: 410px) {
   .chat-box {
     width: 400px;
   }
 }
 
-@media only screen and (max-width: 409px) and (min-width: 351px){
+@media only screen and (max-width: 409px) and (min-width: 351px) {
   .chat-box {
     width: 350px;
   }
@@ -158,7 +159,7 @@
   }
 }
 
-@media only screen and (max-width: 349px) and (min-width: 200px){
+@media only screen and (max-width: 349px) and (min-width: 200px) {
   .chat-box {
     width: 310px;
   }
